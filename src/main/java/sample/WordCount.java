@@ -91,10 +91,21 @@ public class WordCount {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
-        job.setNumReduceTasks(2);
+        job.setNumReduceTasks(0);
 
         job.setJarByClass(job.getMapperClass());
         job.waitForCompletion(true);
 
+    }
+
+    public static void main(String[] args) {
+        try{
+            Path inputPath = new Path(args[0]);
+            Path outputPath = new Path(args[1]);
+
+            new WordCount(inputPath, outputPath).execute();
+        }catch(Exception e){
+            System.out.println("Usage: " + WordCount.class.getSimpleName() + " [input] [output]");
+        }
     }
 }
