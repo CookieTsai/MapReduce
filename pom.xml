@@ -22,16 +22,10 @@
             <artifactId>hadoop-common</artifactId>
             <version>${hadoop.cdh.version}</version>
         </dependency>
-        <!-- Hadoop HDFS -->
-        <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-hdfs</artifactId>
-            <version>${hadoop.cdh.version}</version>
-        </dependency>
         <!-- Hadoop MapReduce -->
         <dependency>
             <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-mapreduce-client-core</artifactId>
+            <artifactId>hadoop-mapreduce-client-common</artifactId>
             <version>${hadoop.cdh.version}</version>
         </dependency>
     </dependencies>
