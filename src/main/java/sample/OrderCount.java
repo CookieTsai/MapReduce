@@ -36,7 +36,7 @@ public class OrderCount extends Configured implements Tool {
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
             String line = value.toString();
 
-            if(line.matches("^.*act=order.*$")){
+            if(line.indexOf("act=order") != -1){
                 Matcher matcher = pattern.matcher(line);
                 while (matcher.find()) {
                     word.set(matcher.group(1));
