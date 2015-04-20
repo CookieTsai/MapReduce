@@ -30,8 +30,6 @@ public class OrderCount extends Configured implements Tool {
     private Path outputPath;
 
     private final static Pattern pattern = Pattern.compile("([0-9]+),([0-9]+),([0-9]+)");
-    private final static String DRIVER = "_";
-    private final static int HEAD = 20;
 
     public OrderCount(Path inputPath, Path outputPath){
         this.inputPath = inputPath;
@@ -41,6 +39,7 @@ public class OrderCount extends Configured implements Tool {
     public static class Map extends Mapper<LongWritable, Text, Text, IntWritable> {
 
         private Text word = new Text();
+        private IntWritable price = new IntWritable();
 
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
@@ -50,7 +49,8 @@ public class OrderCount extends Configured implements Tool {
                 Matcher matcher = pattern.matcher(line);
                 while (matcher.find()) {
                     word.set(matcher.group(1));
-                    context.write(word, new IntWritable(Integer.parseInt(matcher.group(2)) * Integer.parseInt(matcher.group(3))));
+                    price.set(Integer.parseInt(matcher.group(2)) * Integer.parseInt(matcher.group(3)));
+                    context.write(word, price);
                 }
             }
 
@@ -59,8 +59,7 @@ public class OrderCount extends Configured implements Tool {
 
     public static class Reduce extends Reducer<Text, IntWritable, Text, IntWritable> {
 
-        private Text keyout = new Text();
-        private Text valueout = new Text();
+        private IntWritable sumPrice = new IntWritable();
 
         @Override
         protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
@@ -69,9 +68,8 @@ public class OrderCount extends Configured implements Tool {
             for (IntWritable value:values) {
                 sum += value.get();
             }
-
-            context.write(key, new IntWritable(sum));
-
+            sumPrice.set(sum);
+            context.write(key, sumPrice);
         }
 
     }
