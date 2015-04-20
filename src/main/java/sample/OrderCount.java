@@ -2,6 +2,7 @@ package sample;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -69,13 +70,19 @@ public class OrderCount extends Configured implements Tool {
 
         Configuration conf = new Configuration();
 
+        Path inputPath = new Path(args[0]);
+        Path outputPath = new Path(args[1]);
+
+        FileSystem fs = FileSystem.get(conf);
+        fs.delete(outputPath, true);
+
         Job job = Job.getInstance(conf);
 
         job.setJarByClass(OrderCount.class);
         job.setJobName("OrderCount");
 
-        FileInputFormat.setInputPaths(job, new Path(args[0]));
-        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+        FileInputFormat.setInputPaths(job, inputPath);
+        FileOutputFormat.setOutputPath(job, outputPath);
 
         // input
         job.setInputFormatClass(TextInputFormat.class);
