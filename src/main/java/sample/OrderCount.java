@@ -10,6 +10,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.filecache.DistributedCache;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -29,23 +30,37 @@ public class OrderCount extends Configured implements Tool {
     public static class Map extends Mapper<LongWritable, Text, Text, IntWritable> {
 
         private final static Pattern pattern = Pattern.compile("([0-9]+),([0-9]+),([0-9]+)");
+        private final static String ONE = "1";
+        private final static String TWO = "2";
 
         private Text word = new Text();
         private IntWritable price = new IntWritable();
+        private String count;
+        private int money;
 
         @Override
         public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-            String line = value.toString();
+            if (value.getLength() != 0 ){
 
-            if(line.indexOf("act=order") != -1){
-                Matcher matcher = pattern.matcher(line);
+                Matcher matcher = pattern.matcher(value.toString());
+
                 while (matcher.find()) {
                     word.set(matcher.group(1));
-                    price.set(Integer.parseInt(matcher.group(2)) * Integer.parseInt(matcher.group(3)));
+
+                    count = matcher.group(2);
+                    money = Integer.parseInt(matcher.group(3));
+
+                    if (count.equals(ONE)) {
+                        price.set(money);
+                    } else if (count.equals(TWO)) {
+                        price.set(2 * money);
+                    } else {
+                        price.set(Integer.parseInt(count) * money);
+                    }
+
                     context.write(word, price);
                 }
             }
-
         }
     }
 
@@ -74,7 +89,10 @@ public class OrderCount extends Configured implements Tool {
         Path outputPath = new Path(args[1]);
 
         FileSystem fs = FileSystem.get(conf);
-        fs.delete(outputPath, true);
+
+        if (fs.exists(outputPath)) {
+            fs.delete(outputPath, true);
+        }
 
         Job job = Job.getInstance(conf);
 
