@@ -123,6 +123,7 @@ public class OrderCount extends Configured implements Tool {
 
         job.setNumReduceTasks(1);
 
+
         return job.waitForCompletion(true)? 0 : -1 ;
     }
 
