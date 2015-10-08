@@ -29,19 +29,15 @@ public class OrderCountV3 extends Configured implements Tool {
     public static class DoMap extends Mapper<LongWritable, Text, Text, IntWritable> {
 
         private final static Pattern pattern = Pattern.compile("([0-9]+),([0-9]+),([0-9]+)");
-
         private final static Map<String, IntWritable> map = new HashMap<String, IntWritable>();
-
         private final static String ONE = "1";
 
         private String key;
         private Integer orderPrice;
-
         private Text outKey = new Text();
 
         @Override
         public void map(LongWritable seq, Text value, Context context) throws IOException, InterruptedException {
-
             Matcher m = pattern.matcher(value.toString());
             while (m.find()) {
                 key = m.group(1);
@@ -49,7 +45,6 @@ public class OrderCountV3 extends Configured implements Tool {
                 map.put(key, new IntWritable(orderPrice));
             }
         }
-
         @Override
         protected void cleanup(Context context) throws IOException, InterruptedException {
             for (String key:map.keySet()) {
@@ -57,15 +52,12 @@ public class OrderCountV3 extends Configured implements Tool {
                 context.write(outKey, map.get(key));
             }
         }
-
         private Integer getOrderPrice(String key, Integer price) {
             return (map.get(key) == null)? price:price + map.get(key).get();
         }
-
         private static Integer getPrice(String count, String productPrice) {
             return (count.equals(ONE))? Integer.valueOf(productPrice):Integer.valueOf(count) * Integer.valueOf(productPrice);
         }
-
     }
 
     public int run(String[] args) throws Exception {

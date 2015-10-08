@@ -1,6 +1,7 @@
 package sample;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -13,6 +14,8 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
+import org.apache.hadoop.util.Tool;
+import org.apache.hadoop.util.ToolRunner;
 
 import java.io.IOException;
 import java.util.StringTokenizer;
@@ -20,17 +23,9 @@ import java.util.StringTokenizer;
 /**
  * Created by Cookie on 15/4/6.
  */
-public class WordCount {
+public class WordCount extends Configured implements Tool {
 
-    private Path inputPath;
-    private Path outputPath;
-
-    public WordCount(Path inputPath, Path outputPath){
-        this.inputPath = inputPath;
-        this.outputPath = outputPath;
-    }
-
-    public static class Map extends Mapper<LongWritable, Text, Text, IntWritable> {
+    public static class DoMap extends Mapper<LongWritable, Text, Text, IntWritable> {
 
         private final static IntWritable ONE_COUNT = new IntWritable(1);
         private Text word = new Text();
@@ -46,7 +41,7 @@ public class WordCount {
         }
     }
 
-    public static class Reduce extends Reducer<Text, IntWritable, Text, IntWritable> {
+    public static class DoReduce extends Reducer<Text, IntWritable, Text, IntWritable> {
 
         @Override
         protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
@@ -59,15 +54,25 @@ public class WordCount {
 
     }
 
-    public void execute() throws IOException, ClassNotFoundException, InterruptedException {
+    public int run(String[] args) throws Exception {
 
         Configuration conf = new Configuration();
 
+        Path inputPath = new Path(args[0]);
+        Path outputPath = new Path(args[1]);
+
         FileSystem fs = FileSystem.get(conf);
-        fs.delete(outputPath, true);
+
+        if (fs.exists(outputPath)) {
+            fs.delete(outputPath, true);
+        }
 
         Job job = Job.getInstance(conf);
-        job.setJobName("wordCount");
+
+        job.setNumReduceTasks(5);
+
+        job.setJarByClass(WordCount.class);
+        job.setJobName("WordCount");
 
         FileInputFormat.setInputPaths(job, inputPath);
         FileOutputFormat.setOutputPath(job, outputPath);
@@ -76,34 +81,25 @@ public class WordCount {
         job.setInputFormatClass(TextInputFormat.class);
 
         // mapper
-        job.setMapperClass(Map.class);
+        job.setMapperClass(DoMap.class);
 
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(IntWritable.class);
 
-        //job.setCombinerClass(Reduce.class);
-
         // reducer
-        job.setReducerClass(Reduce.class);
+        job.setReducerClass(DoReduce.class);
 
         // output
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
-        job.setNumReduceTasks(0);
-
-        job.setJarByClass(job.getMapperClass());
-        job.waitForCompletion(true);
-
+        return job.waitForCompletion(true)? 0 : -1 ;
     }
 
     public static void main(String[] args) {
         try{
-            Path inputPath = new Path(args[0]);
-            Path outputPath = new Path(args[1]);
-
-            new WordCount(inputPath, outputPath).execute();
+            ToolRunner.run(new WordCount(), args);
         }catch(Exception e){
             System.out.println("Usage: " + WordCount.class.getSimpleName() + " [input] [output]");
         }
