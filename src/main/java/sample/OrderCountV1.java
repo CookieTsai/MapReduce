@@ -45,7 +45,6 @@ public class OrderCountV1 extends Configured implements Tool {
 
                 while (matcher.find()) {
                     word.set(matcher.group(1));
-
                     count = matcher.group(2);
                     money = Integer.parseInt(matcher.group(3));
 
@@ -56,7 +55,6 @@ public class OrderCountV1 extends Configured implements Tool {
                     } else {
                         price.set(Integer.parseInt(count) * money);
                     }
-
                     context.write(word, price);
                 }
             }
@@ -121,7 +119,6 @@ public class OrderCountV1 extends Configured implements Tool {
         job.setOutputValueClass(IntWritable.class);
 
         job.setNumReduceTasks(1);
-
 
         return job.waitForCompletion(true)? 0 : -1 ;
     }

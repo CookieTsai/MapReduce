@@ -1,4 +1,4 @@
-# READ ME
+# Read Me
 
 ```
 $ echo "foo foo quux labs foo bar quux" | python mapper.py
