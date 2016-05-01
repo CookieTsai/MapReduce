@@ -1,4 +1,4 @@
-package sample;
+package sample.wordcount;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -23,9 +23,23 @@ import java.util.StringTokenizer;
 /**
  * Created by Cookie on 15/4/6.
  */
+<<<<<<< HEAD:src/main/java/sample/WordCount.java
 public class WordCount extends Configured implements Tool {
 
     public static class DoMap extends Mapper<LongWritable, Text, Text, IntWritable> {
+=======
+public class Main {
+
+    private Path inputPath;
+    private Path outputPath;
+
+    public Main(Path inputPath, Path outputPath){
+        this.inputPath = inputPath;
+        this.outputPath = outputPath;
+    }
+
+    public static class Map extends Mapper<LongWritable, Text, Text, IntWritable> {
+>>>>>>> master:src/main/java/sample/wordcount/Main.java
 
         private final static IntWritable ONE_COUNT = new IntWritable(1);
         private Text word = new Text();
@@ -99,9 +113,16 @@ public class WordCount extends Configured implements Tool {
 
     public static void main(String[] args) {
         try{
+<<<<<<< HEAD:src/main/java/sample/WordCount.java
             ToolRunner.run(new WordCount(), args);
+=======
+            Path inputPath = new Path(args[0]);
+            Path outputPath = new Path(args[1]);
+
+            new Main(inputPath, outputPath).execute();
+>>>>>>> master:src/main/java/sample/wordcount/Main.java
         }catch(Exception e){
-            System.out.println("Usage: " + WordCount.class.getSimpleName() + " [input] [output]");
+            System.out.println("Usage: " + Main.class.getName() + " [input] [output]");
         }
     }
 }
