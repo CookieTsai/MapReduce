@@ -105,7 +105,7 @@ public class Main {
 
             new Main(inputPath, outputPath).execute();
         }catch(Exception e){
-            System.out.println("Usage: " + Main.class.getSimpleName() + " [input] [output]");
+            System.out.println("Usage: " + Main.class.getName() + " [input] [output]");
         }
     }
 }
