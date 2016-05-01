@@ -1,4 +1,4 @@
-package sample;
+package sample.wordcount;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
@@ -20,12 +20,12 @@ import java.util.StringTokenizer;
 /**
  * Created by Cookie on 15/4/6.
  */
-public class WordCount {
+public class Main {
 
     private Path inputPath;
     private Path outputPath;
 
-    public WordCount(Path inputPath, Path outputPath){
+    public Main(Path inputPath, Path outputPath){
         this.inputPath = inputPath;
         this.outputPath = outputPath;
     }
@@ -103,9 +103,9 @@ public class WordCount {
             Path inputPath = new Path(args[0]);
             Path outputPath = new Path(args[1]);
 
-            new WordCount(inputPath, outputPath).execute();
+            new Main(inputPath, outputPath).execute();
         }catch(Exception e){
-            System.out.println("Usage: " + WordCount.class.getSimpleName() + " [input] [output]");
+            System.out.println("Usage: " + Main.class.getSimpleName() + " [input] [output]");
         }
     }
 }
