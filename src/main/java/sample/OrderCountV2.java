@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Cookie on 15/4/6.
  */
-public class OrderCountV3 extends Configured implements Tool {
+public class OrderCountV2 extends Configured implements Tool {
 
     public static class DoMap extends Mapper<LongWritable, Text, Text, IntWritable> {
 
@@ -77,8 +77,8 @@ public class OrderCountV3 extends Configured implements Tool {
 
         job.setNumReduceTasks(0);
 
-        job.setJarByClass(OrderCountV3.class);
-        job.setJobName("OrderCountV3");
+        job.setJarByClass(OrderCountV2.class);
+        job.setJobName("OrderCountV2");
 
         FileInputFormat.setInputPaths(job, inputPath);
         FileOutputFormat.setOutputPath(job, outputPath);
@@ -102,9 +102,9 @@ public class OrderCountV3 extends Configured implements Tool {
 
     public static void main(String[] args) {
         try{
-            ToolRunner.run(new OrderCountV3(), args);
+            ToolRunner.run(new OrderCountV2(), args);
         }catch(Exception e){
-            System.out.println("Usage: " + OrderCountV3.class.getSimpleName() + " [input] [output]");
+            System.out.println("Usage: " + OrderCountV2.class.getName() + " [input] [output]");
         }
     }
 }

@@ -10,7 +10,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
-import org.apache.hadoop.mapreduce.filecache.DistributedCache;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -25,7 +24,7 @@ import java.util.regex.Pattern;
 /**
  * Created by Cookie on 15/4/6.
  */
-public class OrderCount extends Configured implements Tool {
+public class OrderCountV1 extends Configured implements Tool {
 
     public static class Map extends Mapper<LongWritable, Text, Text, IntWritable> {
 
@@ -96,8 +95,8 @@ public class OrderCount extends Configured implements Tool {
 
         Job job = Job.getInstance(conf);
 
-        job.setJarByClass(OrderCount.class);
-        job.setJobName("OrderCount");
+        job.setJarByClass(OrderCountV1.class);
+        job.setJobName("OrderCountV1");
 
         FileInputFormat.setInputPaths(job, inputPath);
         FileOutputFormat.setOutputPath(job, outputPath);
@@ -129,9 +128,9 @@ public class OrderCount extends Configured implements Tool {
 
     public static void main(String[] args) {
         try{
-            ToolRunner.run(new OrderCount(), args);
+            ToolRunner.run(new OrderCountV1(), args);
         }catch(Exception e){
-            System.out.println("Usage: " + OrderCount.class.getSimpleName() + " [input] [output]");
+            System.out.println("Usage: " + OrderCountV1.class.getName() + " [input] [output]");
         }
     }
 }

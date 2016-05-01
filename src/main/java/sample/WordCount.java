@@ -69,7 +69,7 @@ public class WordCount extends Configured implements Tool  {
 
         Job job = Job.getInstance(conf);
 
-        job.setNumReduceTasks(5);
+        job.setNumReduceTasks(1);
 
         job.setJarByClass(WordCount.class);
         job.setJobName("WordCount");
