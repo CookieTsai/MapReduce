@@ -1,5 +1,9 @@
 # READ ME
 
+## CookieTsai's Getting Started with Maven
+
+[Getting Started with Maven](http://tsai-cookie.blogspot.tw/2016/03/getting-started-with-maven.html)
+
 ## Git Clone
 
 ```
@@ -13,7 +17,6 @@ export JAVA_HOME=/c/Program\ Files/Java/jdk1.7.0_79
 
 export PATH=$JAVA_HOME/bin:/c/Users/H205/Desktop/Lab/exe/apache-maven-3.3.9/bin:$PATH
 ```
-
 
 ## Make a Jar File
 
