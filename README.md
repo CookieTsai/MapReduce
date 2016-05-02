@@ -68,3 +68,26 @@ foo     3
 labs    1
 quux    2
 ```
+
+## Run MapReduce
+
+### Windows's Git Bash
+
+```
+$ mvn clean package
+$ scp input/wordcount.txt root@192.168.60.101:~
+$ scp target/sample-1.0-SNAPSHOT.jar root@192.168.60.101:~
+```
+
+### Linux
+
+```
+$ hadoop fs -ls /
+$ hadoop fs -put wordcount.txt /
+$ hadoop jar sample-1.0-SNAPSHOT.jar sample.WordCount /wordcount.txt /output
+```
+
+
+
+
+
