@@ -6,6 +6,15 @@
 $ git clone https://github.com/CookieTsai/MapReduce.git
 ```
 
+## .bash_profile
+
+```
+export JAVA_HOME=/c/Program\ Files/Java/jdk1.7.0_79
+
+export PATH=$JAVA_HOME/bin:/c/Users/H205/Desktop/Lab/exe/apache-maven-3.3.9/bin:$PATH
+```
+
+
 ## Make a Jar File
 
 ```
