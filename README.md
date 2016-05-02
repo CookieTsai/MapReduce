@@ -10,7 +10,7 @@
 $ git clone https://github.com/CookieTsai/MapReduce.git
 ```
 
-## .bash_profile
+## vim ~/.bash_profile
 
 ```
 export JAVA_HOME=/c/Program\ Files/Java/jdk1.7.0_79
